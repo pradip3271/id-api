@@ -1,172 +1,30 @@
 package fixture;
 
-import java.util.Locale;
-
-import com.github.javafaker.Faker;
-
 public class PayLoads {
 	
 	private String emailAndPasswordPayload;
+	private String emailAndPasswordStatusPendingPayload;
 
-	Faker faker = new Faker(Locale.UK);
-
-	public String getU16AcctPayLoad() {
-		
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frostuser";
-		String parentEmail = faker.internet().emailAddress();
+	public String getNewAcctPayLoad(String fName, String lName, String pw, String email, String pEmail, String junior, String terms) {
 
 		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"parent_email_address\": \"" + parentEmail + "\",\n"
-				+ "  \"junior\": true,\n" + "  \"contact_preferences\": [\n" + "    {\n"
+				+ fName + "\",\n" + "  \"last_name\": \"" + lName + "\",\n"
+				+ "  \"password\": \"" + pw + "\",\n" + "  \"email_address\": \"" + email
+				+ "\",\n" + "  \"parent_email_address\": \"" + pEmail + "\",\n"
+				+ "  \"junior\": "+ junior +",\n" + "  \"contact_preferences\": [\n" + "    {\n"
 				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": true\n" + "}\n" + "";
+				+ "  \"terms\": "+ terms +"\n" + "}\n" + "";
 	}
 
-	public String getO16AcctPayLoad() {
-
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frostuser";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": true\n" + "}\n" + "";
-	}
-	
-	public String getO16AcctEmptyPasswordPayLoad() {
-		
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": true\n" + "}\n" + "";
-	}
-	
-public String getO16AcctEmptyEmailPayLoad() {
-		
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = "";
-		String password = "frostuser";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": true\n" + "}\n" + "";
-	}
-
-	public String getO16AcctEmptyLastNamePayLoad() {
-
-		String firstName = faker.name().firstName();
-		String lastName = "";
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frostuser";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \"" + firstName + "\",\n"
-				+ "  \"last_name\": \"" + lastName + "\",\n" + "  \"password\": \"" + password + "\",\n"
-				+ "  \"email_address\": \"" + emailAddress + "\",\n" + "  \"junior\": false,\n"
-				+ "  \"contact_preferences\": [\n" + "    {\n" + "      \"post_preference\": false,\n"
-				+ "      \"email_preference\": true\n" + "    }\n" + "  ],\n" + "  \"terms\": true\n" + "}\n" + "";
-	}
-
-	public String getO16AcctEmptyFirstNamePayLoad() {
-
-		String firstName = "";
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frostuser";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \"" + firstName + "\",\n"
-				+ "  \"last_name\": \"" + lastName + "\",\n" + "  \"password\": \"" + password + "\",\n"
-				+ "  \"email_address\": \"" + emailAddress + "\",\n" + "  \"junior\": false,\n"
-				+ "  \"contact_preferences\": [\n" + "    {\n" + "      \"post_preference\": false,\n"
-				+ "      \"email_preference\": true\n" + "    }\n" + "  ],\n" + "  \"terms\": true\n" + "}\n" + "";
-	}
-	
-	public String getO16AcctEmptyTermsPayLoad() {
-
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frostuser";
-		String terms = null;
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": "+terms+"\n" + "}\n" + "";
-	}
-	
-	public String getO16AcctFalseTermsPayLoad() {
-
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frostuser";
-		String terms = "false";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": "+terms+"\n" + "}\n" + "";
-	}
-	
-	public String getO16AcctInvalidPasswordPayLoad() {
-
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = faker.internet().emailAddress();
-		String password = "frost";
-		String terms = "true";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": "+terms+"\n" + "}\n" + "";
-	}
-	
-	public String getO16AcctInvalidEmailPayLoad() {
-
-		String firstName = faker.name().firstName();
-		String lastName = faker.name().lastName();
-		String emailAddress = "testmail.com";
-		String password = "frostuser";
-		String terms = "true";
-
-		return "{\n" + "  \"title\": {\n" + "    \"id\": 1\n" + "  },\n" + "  \"first_name\": \""
-				+ firstName + "\",\n" + "  \"last_name\": \"" + lastName + "\",\n"
-				+ "  \"password\": \"" + password + "\",\n" + "  \"email_address\": \"" + emailAddress
-				+ "\",\n" + "  \"junior\": false,\n" + "  \"contact_preferences\": [\n" + "    {\n"
-				+ "      \"post_preference\": false,\n" + "      \"email_preference\": true\n" + "    }\n" + "  ],\n"
-				+ "  \"terms\": "+terms+"\n" + "}\n" + "";
-	}
-	
 	public String getEmailAndPasswordPayload() {
 		
 		return emailAndPasswordPayload;
+		
+	}
+	
+	public String getEmailAndPasswordStatusPendingPayload() {
+		
+		return emailAndPasswordStatusPendingPayload;
 		
 	}
 
@@ -178,6 +36,21 @@ public String getO16AcctEmptyEmailPayLoad() {
 				"    \"value\": \""+ email +"\"\n" + 
 				"  },\n" + 
 				"  \"password\": \""+ password +"\"\n" + 
+				"}\n" + 
+				"";
+		
+	}
+
+	public void setEmailAndPasswordStatusPendingPayload(String email, String password) {
+		
+		emailAndPasswordStatusPendingPayload = "{\n" + 
+				"  \"identifier\": {\n" + 
+				"    \"type\": \"email\",\n" + 
+				"    \"value\": \""+ email +"\"\n" + 
+				"  },\n" + 
+				"  \"password\": \""+ password +"\",\n" + 
+				"  \"status\": [\"pending\"]\n" + 
+				"  \n" + 
 				"}";
 		
 	}

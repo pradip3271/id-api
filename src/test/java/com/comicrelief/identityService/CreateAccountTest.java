@@ -9,13 +9,14 @@ import utils.RestServices;
 
 public class CreateAccountTest extends BaseTest {
 
-	// Test empty data supplied and verify response
+	// Create account with empty data supplied and verify response
 	@Test
 	public void createAccountNoData() {
+		
+		// Empty payload
+		String payload = ""; 
 
-		String payload = "";
-
-		Response res = RestServices.createAccount(reqSpec, payload);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
 				.body("errors[0].field", equalTo("junior")).and()
@@ -30,11 +31,13 @@ public class CreateAccountTest extends BaseTest {
 	// Create Under16 account if there is valid data in the request
 	@Test
 	public void createU16Account() {
+		
+		generateNewFakerAccountData();
+		
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email, parentEmail, junior = "true", terms);
 
-		String payload = pl.getU16AcctPayLoad();
-
-		Response res = RestServices.createAccount(reqSpec, payload);
-
+		Response res = RestServices.postAccount(reqSpec, payload);
+		
 		res.then().statusCode(200).and().header("Content-Type", equalTo("application/json")).and().body("status",
 				equalTo("complete"));
 	}
@@ -42,10 +45,12 @@ public class CreateAccountTest extends BaseTest {
 	// Create Over16 account if there is valid data in the request
 	@Test
 	public void createO16Account() {
+		
+		generateNewFakerAccountData();
 
-		String payload = pl.getO16AcctPayLoad();
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email, parentEmail, junior, terms);
 
-		Response res = RestServices.createAccount(reqSpec, payload);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		res.then().statusCode(200).and().header("Content-Type", equalTo("application/json")).and().body("status",
 				equalTo("complete"));
@@ -53,17 +58,25 @@ public class CreateAccountTest extends BaseTest {
 
 	// POST to create account with existing email id and expect status code 400
 	@Test
-	public void createAccountWithExistingEmail() {
-
+	public void createAccountWithExistingEmailAddress() {
+		
+		generateNewFakerAccountData();
+		
 		// Create new O16 account
-		String payload = pl.getO16AcctPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
-
-		// Request with existing email id
-		res = RestServices.createAccount(reqSpec, payload);
-
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email, parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
+		res.then().statusCode(200).and().contentType("application/json");
+		
+		// Extract email id from response
+		JsonPath jp = new JsonPath(res.asString());
+		email = jp.get("email_address");
+		
+		// Create Account with above email id
+		payload = pl.getNewAcctPayLoad(fName, lName, password, email, parentEmail, junior, terms);
+		res = RestServices.postAccount(reqSpec, payload);
+		
 		// Verify response code error message
-		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
+		res.then().log().all().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
 				.body("errors[0].field", equalTo("email_address")).and()
 				.body("errors[0].message", equalTo("Email address already exists"));
 
@@ -72,10 +85,12 @@ public class CreateAccountTest extends BaseTest {
 	// POST to create account with empty password and expect status code 400
 	@Test
 	public void createAccountWithEmptyPassword() {
+		
+		generateNewFakerAccountData();
 
-		// Create account
-		String payload = pl.getO16AcctEmptyPasswordPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		// Create new O16 account with empty password
+		String payload = pl.getNewAcctPayLoad(fName, lName, password = "", email, parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
@@ -86,10 +101,12 @@ public class CreateAccountTest extends BaseTest {
 	// POST to create account with empty email id and expect status code 400
 	@Test
 	public void createAccountWithEmptyEmail() {
+		
+		generateNewFakerAccountData();
 
-		// Create account
-		String payload = pl.getO16AcctEmptyEmailPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		// Create new O16 account with empty email id
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email = "", parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
@@ -101,10 +118,12 @@ public class CreateAccountTest extends BaseTest {
 	// POST to create account with empty last name and expect 200 but pending
 	@Test
 	public void createAccountWithEmptyLastName() {
-
-		// Create account
-		String payload = pl.getO16AcctEmptyLastNamePayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		
+		generateNewFakerAccountData();
+		
+		// Create new O16 account with empty last name
+		String payload = pl.getNewAcctPayLoad(fName, lName = "", password, email, parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(200).and().header("Content-Type", equalTo("application/json")).and().body("status",
@@ -116,9 +135,11 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void createAccountWithEmptyFirstName() {
 
-		// Create account
-		String payload = pl.getO16AcctEmptyFirstNamePayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		generateNewFakerAccountData();
+		
+		// Create new O16 account with empty first name
+		String payload = pl.getNewAcctPayLoad(fName = "", lName, password, email, parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(200).and().header("Content-Type", equalTo("application/json")).and().body("status",
@@ -129,10 +150,12 @@ public class CreateAccountTest extends BaseTest {
 	// POST to create account with empty terms and expect 400
 	@Test
 	public void createAccountWithEmptyTerms() {
+		
+		generateNewFakerAccountData();
 
-		// Create account
-		String payload = pl.getO16AcctEmptyTermsPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		// Create new O16 account with empty terms
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email, parentEmail, junior, terms = null);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
@@ -144,10 +167,12 @@ public class CreateAccountTest extends BaseTest {
 	// POST to create account with terms set to false and expect 400
 	@Test
 	public void createAccountWithFalseTerms() {
+		
+		generateNewFakerAccountData();
 
-		// Create account
-		String payload = pl.getO16AcctFalseTermsPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		// Create new O16 account with terms set to false
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email, parentEmail, junior, terms = "false");
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
@@ -159,10 +184,12 @@ public class CreateAccountTest extends BaseTest {
 	// POST request should fail if there is a password less than 8 characters
 	@Test
 	public void createAccountWithInvalidPassword() {
+		
+		generateNewFakerAccountData();
 
-		// Create account
-		String payload = pl.getO16AcctInvalidPasswordPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
+		// Create new O16 account with password less than 8 characters
+		String payload = pl.getNewAcctPayLoad(fName, lName, password = "test12", email, parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
 
 		// Verify response
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
@@ -174,11 +201,13 @@ public class CreateAccountTest extends BaseTest {
 	// POST request should fail if there is an invalid email format
 	@Test
 	public void createAccountWithInvalidEmail() {
+		
+		generateNewFakerAccountData();
 
-		// Create account
-		String payload = pl.getO16AcctInvalidEmailPayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
-
+		// Create new O16 account with invalid email id
+		String payload = pl.getNewAcctPayLoad(fName, lName, password, email = "@gmail.com", parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
+		
 		// Verify response
 		res.then().statusCode(400).and().header("Content-Type", equalTo("application/json")).and()
 				.body("errors[0].field", equalTo("emailAddress")).and()
@@ -186,36 +215,37 @@ public class CreateAccountTest extends BaseTest {
 
 	}
 
-	// Pending user should be cancelled after I create a complete user with the same
-	// email address
+	// Pending user should be cancelled after I create a complete user with the same email address
 	@Test
 	public void createAccountForPendingUser() {
-
-		// Create account with empty first name
-		String payload = pl.getO16AcctEmptyFirstNamePayLoad();
-		Response res = RestServices.createAccount(reqSpec, payload);
 		
-		System.out.println(res.asString());
+		generateNewFakerAccountData();
+		
+		// Create partial O16 account with empty first name
+		String payload = pl.getNewAcctPayLoad(fName = "", lName, password, email, parentEmail, junior, terms);
+		Response res = RestServices.postAccount(reqSpec, payload);
 		
 		// Verify status pending
 		res.then().statusCode(200).and().header("Content-Type", equalTo("application/json")).and().body("status",
 				equalTo("pending"));
 		
-		// Retrieve email address from response
+		// Retrieve pending email address and password from response
 		JsonPath jp = new JsonPath(res.asString());
-		String email = jp.get("email_address");
-		String password = "frostuser";
+		email = jp.get("email_address");
 		
-		// Create payload with same email address and password
-		pl.setEmailAndPasswordPayload(email, password);
-		payload = pl.getEmailAndPasswordPayload();
+		// Create payload with above email address, password and set status pending
+		pl.setEmailAndPasswordStatusPendingPayload(email, password);
+		payload = pl.getEmailAndPasswordStatusPendingPayload();
 		
-		System.out.println(payload);
+		// Authenticate user and verify HTTP status code 200
+		res = RestServices.postAuthenticate(reqSpec, payload);
+		res.then().statusCode(200);
 		
-		// User Authenticate and verify HTTP status code 200
-		res = RestServices.userAuthenticate(reqSpec, payload);
-//		res.then().statusCode(200);
-		
+		// Next I create a full account with the same email address, which cancels my previous partial account
+		payload = pl.getNewAcctPayLoad(fName = "Test first name", lName, password, email, parentEmail, junior, terms);
+		res = RestServices.postAccount(reqSpec, payload);
+		res.then().statusCode(200).and().header("Content-Type", equalTo("application/json")).and().body("status",
+				equalTo("complete"));
 		
 	}
 
