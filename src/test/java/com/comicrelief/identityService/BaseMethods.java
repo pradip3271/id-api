@@ -9,12 +9,15 @@ import com.github.javafaker.Faker;
 
 import fixture.PayLoads;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import utils.Helper;
 
-public class BaseTest {
+public class BaseMethods {
 	
-	protected RequestSpecification reqSpec;
+	protected RequestSpecification requestSpec;
+	protected ResponseSpecification resSpec;
 	protected PayLoads pl;
 	protected Faker faker;
 	
@@ -34,10 +37,14 @@ public class BaseTest {
 		Properties prop = Helper.loadPropertyFile("./src/test/resources/env.properties");
 		
 		RestAssured.baseURI = prop.getProperty("URI");
-		reqSpec = RestAssured.given().header("Content-Type", "application/json");
+		
+		RequestSpecBuilder builder = new RequestSpecBuilder();
+		builder.addHeader("Content-Type", "application/json");
+		requestSpec = builder.build();
 		
 	}
 	
+	// Generate fake test data
 	public void generateNewFakerAccountData() {
 		
 		faker = new Faker(Locale.UK);
